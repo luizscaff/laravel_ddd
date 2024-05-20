@@ -22,5 +22,16 @@ Observations:
     
     - Extensive feature tests implemented using PHP Unit;
     
+To install it:
 
+    - Clone the project;
 
+    - Open a terminal, navigate to the project folder and run the command "composer install";
+
+    - Create a database;
+
+    - Set up your .env file referencing the database you created;
+
+    - In the terminal, run the command "php artisan migrate";
+
+    - If you wish, at this point you can already run the command "php artisan test" to run all the tests available in the project;
