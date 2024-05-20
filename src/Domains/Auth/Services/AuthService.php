@@ -20,7 +20,7 @@ class AuthService
         $validator = Validator::make($data, self::registerRules());
 
         if ($validator->fails()) {
-            return response()->json($validator->errors(), 400);
+            return response()->json(['errors' => $validator->errors()], 422);
         }
 
         $userData['name'] = $data['name'];
@@ -51,13 +51,13 @@ class AuthService
         $validator = Validator::make($data, self::loginRules());
 
         if ($validator->fails()) {
-            return response()->json($validator->errors(), 400);
+            return response()->json(['errors' => $validator->errors()], 422);
         }
 
         $user = $this->userRepository->findByEmail($data['email']);
 
         if (!$user || !Hash::check($data['password'], $user->password)) {
-            return response()->json(['message' => 'Unauthorized'], 400);
+            return response()->json(['message' => 'Unauthorized'], 403);
         }
 
         $token = $user->createToken('auth_token')->plainTextToken;
