@@ -38,7 +38,7 @@ class BookService
         $validator = Validator::make($data, self::saveRules());
 
         if ($validator->fails()) {
-            return response()->json($validator->errors(), 400);
+            return response()->json(['errors' => $validator->errors()], 422);
         }
 
         $bookData['name'] = $data['name'];
@@ -55,7 +55,7 @@ class BookService
         $validator = Validator::make($data, self::saveRules());
 
         if ($validator->fails()) {
-            return response()->json($validator->errors(), 400);
+            return response()->json(['errors' => $validator->errors()], 422);
         }
 
         $bookData['name'] = $data['name'];
@@ -87,7 +87,7 @@ class BookService
 
         if ($book) {
             $this->bookRepository->destroy($book);
-            return response()->json(['message' => 'Book deleted', 200]);
+            return response()->json(['message' => 'Book deleted'], 200);
         } else {
             return response()->json(['message' => 'Book not found'], 404);
         }
