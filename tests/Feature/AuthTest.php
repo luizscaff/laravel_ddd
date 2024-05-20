@@ -54,7 +54,7 @@ class AuthTest extends TestCase
 
         $json = json_decode($data, true);
 
-        $response = $this->json('post', 'api/user/register', $json, ['Accept' => 'application/json'])
+        $response = $this->json('post', 'api/user/register', $json)
             ->assertStatus(Response::HTTP_UNPROCESSABLE_ENTITY)
             ->assertJsonValidationErrors([
                 "name", "email", "password"
@@ -92,7 +92,6 @@ class AuthTest extends TestCase
                     'token_type'
                 ]
             );
-
     }
 
     public function test_user_login_with_wrong_credentials()
@@ -107,7 +106,7 @@ class AuthTest extends TestCase
             "email": "login@test",
             "password": "abcdefghij"
         }';
-    
+
         $json = json_decode($data, true);
 
         $response = $this->json('post', 'api/user/login', $json)
@@ -120,23 +119,10 @@ class AuthTest extends TestCase
 
     public function test_user_successful_logout()
     {
-        $user = User::create([
-            'name' => 'Login Test',
-            'email' => 'login@test',
-            'password' => '$2y$10$AuY4vtPz.sx8rE4TU14IZuLT3yPkGJOdo/kkM0sIJx1N84bqWApIa'
-        ]);
-
-        $data = '{
-            "email": "login@test",
-            "password": "12345678"
-        }';
-    
-        $json = json_decode($data, true);
-    
-        $login = $this->json('post', 'api/user/login', $json);
+        $login = self::login();
 
         $response = $this->withHeaders(['Authorization' => 'Bearer ' . $login['token']])
-            ->json('delete', 'api/user/logout', $json)
+            ->json('delete', 'api/user/logout')
             ->assertStatus(Response::HTTP_OK)
             ->assertJson(function (AssertableJson $assertableJson) {
                 $assertableJson->where('message', 'You have successfully logged out');
@@ -146,22 +132,9 @@ class AuthTest extends TestCase
 
     public function test_user_unauthorized_logout_attempt()
     {
-        $user = User::create([
-            'name' => 'Login Test',
-            'email' => 'login@test',
-            'password' => '$2y$10$AuY4vtPz.sx8rE4TU14IZuLT3yPkGJOdo/kkM0sIJx1N84bqWApIa'
-        ]);
+        $login = self::login();
 
-        $data = '{
-            "email": "login@test",
-            "password": "12345678"
-        }';
-    
-        $json = json_decode($data, true);
-    
-        $login = $this->json('post', 'api/user/login', $json);
-
-        $response = $this->json('delete', 'api/user/logout', $json)
+        $response = $this->json('delete', 'api/user/logout')
             ->assertStatus(Response::HTTP_UNAUTHORIZED)
             ->assertJson(function (AssertableJson $assertableJson) {
                 $assertableJson->where('message', 'Unauthenticated.');
