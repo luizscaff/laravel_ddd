@@ -8,12 +8,16 @@ class BookRepository
 {
     public function index()
     {
-        return Book::select('name', 'isbn', 'value')->get();
+        return Book::with(['stores:stores.id,stores.name,stores.address'])
+            ->select('id', 'name', 'isbn', 'value')
+            ->get();
     }
 
     public function getById($bookId)
     {
-        return Book::select('name', 'isbn', 'value')->find($bookId);
+        return Book::with(['stores:stores.id,stores.name,stores.address'])
+            ->select('id', 'books.name', 'books.isbn', 'value')
+            ->find($bookId);
     }
 
     public function store(array $data)
