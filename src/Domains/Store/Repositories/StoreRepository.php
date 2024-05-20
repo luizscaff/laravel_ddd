@@ -8,12 +8,16 @@ class StoreRepository
 {
     public function index()
     {
-        return Store::select('name', 'address')->get();
+        return Store::with(['books:books.id,books.name,isbn,value'])
+            ->select('id', 'name', 'address')
+            ->get();
     }
 
     public function getById($storeId)
     {
-        return Store::select('name', 'address')->find($storeId);
+        return Store::with(['books:books.id,books.name,isbn,value'])
+            ->select('id', 'name', 'address')
+            ->find($storeId);
     }
 
     public function store(array $data)
