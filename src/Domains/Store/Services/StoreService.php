@@ -38,7 +38,7 @@ class StoreService
         $validator = Validator::make($data, self::saveRules());
 
         if ($validator->fails()) {
-            return response()->json($validator->errors(), 400);
+            return response()->json(['errors' => $validator->errors()], 422);
         }
 
         $storeData['name'] = $data['name'];
@@ -54,7 +54,7 @@ class StoreService
         $validator = Validator::make($data, self::saveRules());
 
         if ($validator->fails()) {
-            return response()->json($validator->errors(), 400);
+            return response()->json(['errors' => $validator->errors()], 422);
         }
 
         $storeData['name'] = $data['name'];
