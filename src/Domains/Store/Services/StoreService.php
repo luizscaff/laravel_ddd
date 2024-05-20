@@ -26,7 +26,11 @@ class StoreService
     {
         $store = $this->storeRepository->getById($storeId);
 
-        return response()->json($store);
+        if ($store) {
+            return response()->json($store);
+        } else {
+            return response()->json(['message' => 'Store not found'], 404);
+        }
     }
 
     public function store($data)
@@ -55,6 +59,7 @@ class StoreService
 
         $storeData['name'] = $data['name'];
         $storeData['address'] = $data['address'];
+
         $store = Store::find($storeId);
 
         if ($store) {
@@ -79,7 +84,7 @@ class StoreService
 
         if ($store) {
             $this->storeRepository->destroy($store);
-            return response()->json(['message' => 'Store deleted', 200]);
+            return response()->json(['message' => 'Store deleted'], 200);
         } else {
             return response()->json(['message' => 'Store not found'], 404);
         }
