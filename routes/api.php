@@ -3,6 +3,7 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\BookController;
 use App\Http\Controllers\StoreController;
 
 /*
@@ -21,6 +22,8 @@ Route::group(['prefix' => 'user'], function () {
     Route::post('login', [AuthController::class, 'login']);
     Route::delete('logout', [AuthController::class, 'logout'])->middleware('auth:sanctum');
 });
+
+Route::apiResource('books', BookController::class)->middleware('auth:sanctum');
 
 Route::apiResource('stores', StoreController::class)->middleware('auth:sanctum');
 
